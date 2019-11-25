@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import CakeList from './CakeList';
 import config from './config';
+import CakeComments from './CakeComments';
 
 class App extends Component {
   state = { cakes: [] }
@@ -38,6 +39,10 @@ class App extends Component {
               routeProps={routeProps} 
             />} 
           /> 
+
+          <Route path='/:id' render={(routeProps) =>
+            <CakeComments cakes={cakes} routeProps={routeProps} />} 
+          />
       </div>
      );
   }
