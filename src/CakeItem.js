@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import config from './config';
-import './Cakes.css';
+import cake_icon from './icons/cake_icon.png';
 
 class CakeItem extends Component {
 	handleViewComments(id) {
@@ -21,6 +21,27 @@ class CakeItem extends Component {
 		})
 		.then(cake => {
 				this.props.routeProps.history.push(`/${cake.id}`)
+		})
+		.catch(err => console.log(err))
+	}
+
+	handleEditCake(id) {
+		fetch(`${config.url}/cakes/${id}`,
+			{
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+				}
+			}
+		)
+		.then(resComments => {
+			if (!resComments.ok) {
+				return resComments.json().then(err => Promise.reject(err))
+			}
+			return resComments.json();
+		})
+		.then(cake => {
+				this.props.routeProps.history.push(`/edit-cake/${cake.id}`)
 		})
 		.catch(err => console.log(err))
 	}
@@ -54,7 +75,7 @@ class CakeItem extends Component {
       <ul className="CakeItem">
         <li>
 					<div className="Cake_headerContainer">
-						<img src="" alt="cake_icon" />
+						<img src={cake_icon} alt="cake_icon" />
 
 						<NavLink to={`/${id}`}>
 							<h2>{name}</h2>  
@@ -68,6 +89,14 @@ class CakeItem extends Component {
             onClick={() => this.handleViewComments(id)}
           >
             View Comments
+          </button>
+
+					<button 
+            type="button"
+						className="Buttons button_editCake"
+            onClick={() => this.handleEditCake(id)}
+          >
+            Edit Cake
           </button>
 
 					<button 

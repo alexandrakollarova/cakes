@@ -2,12 +2,35 @@ import React, { Component } from 'react';
 import config from './config';
 import { Link } from 'react-router-dom';
 
-class AddCake extends Component {
+class EditCake extends Component {
   state = { id: "", name: "", comment: "", imageUrl: "", yumFactor: 1 }
 
   componentDidMount() {
-    // generate some random number 
-    this.setState({id: Math.floor(Math.random() * 100) });
+    let { id } = this.props.routeProps.match.params
+
+    fetch(`${config.url}/cakes/${id}`,  
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      }
+    )        
+    .then(resCakes => {
+        if (!resCakes.ok) {
+          return resCakes.json().then(err => Promise.reject(err))
+        }
+        return resCakes.json()
+    })
+    .then(cake => {
+      this.setState({  
+        id: cake.id,
+        name: cake.name,
+        comment: cake.comment,
+        yumFactor: cake.yumFactor
+      });
+    })
+    .catch(err => console.log(err))
   }
 
   updateName(name) {        
@@ -22,16 +45,19 @@ class AddCake extends Component {
     this.setState({yumFactor: yumFactor});
   }
 
-  handleSubmit = e => {
+  handleEditCake = (e) => {
     e.preventDefault(); 
+    const { id } = this.state
        
-    fetch(`${config.url}/cakes`, {
-      method: 'POST',
-      body: JSON.stringify({ ...this.state }),      
-      headers: {
-        'Content-Type': 'application/json'
+    fetch(`${config.url}/cakes/${id}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify({ ...this.state }),      
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
-    })
+    )
     .then(res => {
       if (!res.ok) {
         return res.json().then(error => {
@@ -41,20 +67,20 @@ class AddCake extends Component {
       return res.json()
     })
     .then((data) => {
-      this.props.addCake(data); 
-      this.props.routeProps.history.goBack()
+      this.props.editCake(data); 
+      this.props.routeProps.history.push('/')
     })
-    .catch(error => { 
-      console.log(error)
-    })
+    .catch(error => { console.log(error) })
   }
 
   render() { 
-    return (       
-      <form onSubmit={this.handleSubmit} className="AddCakeForm"> 
+    const { name, comment, yumFactor } = this.state
+
+    return ( 
+      <form onSubmit={this.handleEditCake} className="AddCakeForm"> 
         <fieldset> 
           <legend>
-            <h2>Add Cake</h2>
+            <h2>Edit Cake</h2>
           </legend>                 
           <label htmlFor="name">Cake Name</label>
           <input
@@ -67,6 +93,7 @@ class AddCake extends Component {
             maxLength="20"
             aria-required="true"
             className="cakeNameInput"
+            value={name}
             required
           />             
           <label htmlFor="yummyness">Yummyness Level</label>
@@ -76,6 +103,7 @@ class AddCake extends Component {
             placeholder="Select one"
             onChange={e => this.updateYumFactor(e.target.value)}
             className="cakeYummynessSelect"
+            value={yumFactor}
           >
             <option value="1">1</option>
             <option value="2">2</option>
@@ -90,7 +118,7 @@ class AddCake extends Component {
             id="commentArea"
             placeholder="e.g. Best cake ever!"
             className="cakeCommentArea" 
-            value={this.state.comment}
+            value={comment}
             onChange={e => this.updateComment(e.target.value)}
           />
               
@@ -98,14 +126,14 @@ class AddCake extends Component {
             type="submit"
             className="Buttons button_addCakeForm"
           >
-            Add Cake
+            Edit Cake
           </button>
 
           <Link to='/' className="Buttons button_goBack">Go Back</Link>
         </fieldset> 
       </form>
-    );
+     );
   }
 }
  
-export default AddCake;
+export default EditCake;
