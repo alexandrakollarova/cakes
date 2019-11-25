@@ -41,6 +41,11 @@ class App extends Component {
     this.setState({ cakes: newCakes });  
   }
 
+  deleteCake = (cakeId) => {
+    const newCakes = this.state.cakes.filter(cake => cake.id !== cakeId)
+    this.setState({ cakes: newCakes });
+  } 
+
   render() {   
     const { cakes } = this.state
 
@@ -50,6 +55,7 @@ class App extends Component {
             <CakeList 
               cakes={cakes} 
               routeProps={routeProps} 
+              deleteCake={this.deleteCake} 
             />} 
           /> 
 

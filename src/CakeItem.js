@@ -25,6 +25,28 @@ class CakeItem extends Component {
 		.catch(err => console.log(err))
 	}
 
+	handleDeleteCake(id) {
+		fetch(`${config.url}/cakes/${id}`,
+			{
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+				}
+			}
+		)
+		.then(res => {
+			if (!res.ok) {
+				return res.json().then(err => Promise.reject(err))
+			}
+			return res.json();
+		})
+		.then(cake => {
+				this.props.deleteCake(cake.id)
+				this.props.routeProps.history.push(`/`)
+		})
+		.catch(err => console.log(err))
+	}
+
   render() { 
 		const { id, name, yumFactor } = this.props
 
@@ -47,7 +69,14 @@ class CakeItem extends Component {
           >
             View Comments
           </button>
-         				
+
+					<button 
+            type="button"
+						className="Buttons"
+            onClick={() => this.handleDeleteCake(id)}
+          >
+            Delete Cake
+          </button>         				
     		</li>
   		</ul> 
  	  );
