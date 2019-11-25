@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom';
 import CakeList from './CakeList';
 import config from './config';
 import CakeComments from './CakeComments';
+import AddCake from './AddCake';
 
 class App extends Component {
   state = { cakes: [] }
@@ -28,6 +29,18 @@ class App extends Component {
     .catch(err => console.log(err))
   }
 
+  addCake = (newCake) => {
+    const newCakes = this.state.cakes.concat(
+      { id: newCake.id, 
+        name: newCake.name, 
+        comment: newCake.comment, 
+        imageUrl: newCake.imageUrl, 
+        yumFactor: newCake.yumFactor
+      }
+    )
+    this.setState({ cakes: newCakes });  
+  }
+
   render() {   
     const { cakes } = this.state
 
@@ -42,6 +55,10 @@ class App extends Component {
 
           <Route path='/:id' render={(routeProps) =>
             <CakeComments cakes={cakes} routeProps={routeProps} />} 
+          />
+
+          <Route path='/add-cake' render={(routeProps) =>
+            <AddCake cakes={cakes} addCake={this.addCake} routeProps={routeProps} />}
           />
       </div>
      );

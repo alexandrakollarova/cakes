@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import config from './config';
+import './Cakes.css';
 
 class CakeItem extends Component {
 	handleViewComments(id) {

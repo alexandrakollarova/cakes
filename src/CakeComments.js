@@ -1,5 +1,6 @@
 import React from 'react';
 import cake_icon from './icons/cake_icon.png';
+import './Cakes.css';
 import { Link } from 'react-router-dom';
 
 const CakeComments = (props) => {

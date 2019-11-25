@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import CakeItem from './CakeItem';
 import { Link } from 'react-router-dom';
+import './Cakes.css';
 
 class CakeList extends Component {
 
