@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
+import { Route } from 'react-router-dom';
+import CakeList from './CakeList';
 
 class App extends Component {
-  state = {  }
-  render() { 
+  state = { cakes: [] }
+
+  render() {   
+    const { cakes } = this.state
+
     return ( 
-      <div>
-        
+      <div className='app'>
+          <Route exact path='/' render={(routeProps) =>
+            <CakeList 
+              cakes={cakes} 
+              routeProps={routeProps} 
+            />} 
+          /> 
       </div>
      );
   }
