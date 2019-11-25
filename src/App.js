@@ -1,9 +1,31 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import CakeList from './CakeList';
+import config from './config';
 
 class App extends Component {
   state = { cakes: [] }
+
+  componentDidMount() {
+    fetch(`${config.url}/cakes`,  
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      }
+    )        
+    .then(resCakes => {
+        if (!resCakes.ok) {
+          return resCakes.json().then(err => Promise.reject(err))
+        }
+        return resCakes.json()
+    })
+    .then(cakes => {
+        this.setState({ cakes: cakes });
+    })
+    .catch(err => console.log(err))
+  }
 
   render() {   
     const { cakes } = this.state
